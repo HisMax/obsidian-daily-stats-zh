@@ -21,19 +21,15 @@ export default class StatsTrackerView extends ItemView {
             }, 200)
         );
     }
-
     getDisplayText() {
         return "字数统计日历";
     }
-
     getIcon() {
-        return "bar-graph";
+        return "nine-grid";
     }
-
     getViewType() {
         return "统计追踪器";
     }
-
     async onOpen() {
         ReactDOM.render(React.createElement(Calendar, {
             data: Object.keys(this.dayCounts).map(day => {
@@ -41,4 +37,8 @@ export default class StatsTrackerView extends ItemView {
             }),
         }), (this as any).contentEl);
     }
+    async onClose() { //避免内存泄漏
+        ReactDOM.unmountComponentAtNode((this as any).contentEl);
+    }
+
 }
