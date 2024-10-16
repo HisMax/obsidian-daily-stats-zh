@@ -1,7 +1,6 @@
 import { TFile, Plugin, MarkdownView, debounce, Debouncer, WorkspaceLeaf, addIcon } from 'obsidian';
-import { VIEW_TYPE_STATS_TRACKER } from './constants';
 import StatsTrackerView from './view';
-
+const VIEW_TYPE_STATS_TRACKER = "统计追踪器";
 interface WordCount {
 	initial: number;
 	current: number;
@@ -22,7 +21,7 @@ export default class DailyStats extends Plugin {
 	statusBarEl: HTMLElement;
 	currentWordCount: number;
 	today: string;
-	debouncedUpdate: Debouncer<[contents: string, filepath: string]>;
+	debouncedUpdate: Debouncer<[contents: string, filepath: string], void>;
 
 	private view: StatsTrackerView;
 
@@ -79,7 +78,7 @@ export default class DailyStats extends Plugin {
 			this.initLeaf();
 		} else {
 			this.registerEvent(
-				this.app.workspace.on("layout-ready", this.initLeaf.bind(this))
+				this.app.workspace.layoutReady,
 			);
 		}
 	}

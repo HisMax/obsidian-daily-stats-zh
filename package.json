@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-daily-stats",
-  "version": "1.0.4",
-  "description": "This is an Obsidian.md plugin that lets you view your daily word count.",
+  "name": "每日字数统计",
+  "version": "1.0.5",
+  "description": "Obsidian插件：让你轻松Get每日字数统计",
   "main": "main.js",
   "scripts": {
     "dev": "rollup --config rollup.config.js -w",
@@ -13,19 +13,21 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
-    "@rollup/plugin-typescript": "^6.0.0",
+    "@rollup/plugin-typescript": "^12.1.0",
     "@types/node": "^14.14.2",
-    "@types/react-calendar-heatmap": "^1.6.2",
     "@types/react-dom": "^17.0.1",
+    "@uiw/react-heat-map": "^2.2.2",
     "obsidian": "https://github.com/obsidianmd/obsidian-api/tarball/master",
     "postcss": "^8.2.6",
     "react": "^17.0.1",
-    "react-calendar-heatmap": "^1.8.1",
     "react-dom": "^17.0.1",
     "rollup": "^2.32.1",
     "rollup-plugin-postcss": "^4.0.0",
     "tslib": "^2.0.3",
-    "typescript": "^4.0.3"
+    "typescript": "^5.6.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@uiw/react-heat-map": "^2.2.2",
+    "moment": "^2.29.1"
+  }
 }

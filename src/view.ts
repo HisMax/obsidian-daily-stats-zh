@@ -1,5 +1,4 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
-import { VIEW_TYPE_STATS_TRACKER } from "./constants";
 import * as ReactDOM from "react-dom";
 import * as React from "react";
 import Calendar from "./calendar";
@@ -19,12 +18,12 @@ export default class StatsTrackerView extends ItemView {
                         return { "date": new Date(new Date(day).setMonth(new Date(day).getMonth() + 1)), "count": this.dayCounts[day] }
                     }),
                 }), (this as any).contentEl);
-            }, 1000)
+            }, 200)
         );
     }
 
     getDisplayText() {
-        return "Daily Stats";
+        return "字数统计日历";
     }
 
     getIcon() {
@@ -32,7 +31,7 @@ export default class StatsTrackerView extends ItemView {
     }
 
     getViewType() {
-        return VIEW_TYPE_STATS_TRACKER;
+        return "统计追踪器";
     }
 
     async onOpen() {

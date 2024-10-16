@@ -1,10 +1,10 @@
 {
-	"id": "obsidian-daily-stats",
-	"name": "Daily Stats",
-	"version": "1.0.4",
+	"id": "每日字数统计",
+	"name": "每日字数统计",
+	"version": "1.0.5",
 	"minAppVersion": "0.10.12",
-	"description": "Track your daily word count across all notes in your vault.",
-	"author": "Dhruvik Parikh",
-	"authorUrl": "https://github.com/dhruvik7",
+	"description": "Obsidian插件：让你轻松Get每日字数统计",
+	"author": "默子 - HistoneMax",
+	"authorUrl": "https://github.com/HisMax",
 	"isDesktopOnly": false
 }
