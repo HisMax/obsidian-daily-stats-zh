@@ -22,3 +22,7 @@ rect:hover {
 #color-elem {
     color: var(--text-accent);
 }
+
+.text-accent {
+    color: var(--text-accent);
+}

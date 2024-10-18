@@ -1,31 +1,73 @@
-// 导入 React 框架及其相关模块，用于创建组件
 import * as React from "react";
-// 从 'react-heat-map' 库中导入 HeatMap 组件，用于生成热力图
-import HeatMap from 'react-heat-map';
+import HeatMap from '@histonemax/react-heat-map';
+import styled from 'styled-components';
 
-// 定义 Heatmap 组件的属性接口。data 是一个数组，代表热力图的数据。
 interface HeatmapProps {
-    data: any[]; // 定义传入的数据类型为任意数组
+    data: Array<{ date: Date; count: number }>;
+}
+
+interface HeatmapState {
+    hoverInfo: { date: string; count: number | null } | null;
 }
 
 // 定义一个 Heatmap 类组件，继承自 React.Component，接受 HeatmapProps 类型的属性
-class Heatmap extends React.Component<HeatmapProps> {
+class Heatmap extends React.Component<HeatmapProps, HeatmapState> {
+    mouseX: number = 0;
+    mouseY: number = 0;
+
+    constructor(props: HeatmapProps) {
+        super(props);
+        this.state = {
+            hoverInfo: null, // 用于存储悬停时显示的信息
+        };
+    }
+
+    // 鼠标悬停时更新 hoverInfo 状态
+    handleMouseEnter = (value: { date: string; count: number | null }) => {
+        this.setState({
+            hoverInfo: value,
+        });
+    };
+
+    // 鼠标离开时清空 hoverInfo 状态
+    handleMouseLeave = () => {
+        this.setState({
+            hoverInfo: null,
+        });
+    };
+
+    handleMouseMove = (e: MouseEvent) => {
+        this.mouseX = e.clientX;
+        this.mouseY = e.clientY;
+    }
+
+    // 获取鼠标的位置
+    componentDidMount() {
+        document.addEventListener('mousemove', this.handleMouseMove);
+    }
+
     // 渲染组件方法
     render() {
+        const formattedData = this.props.data.map(item => ({
+            date: item.date instanceof Date ?item.date.toISOString().split('T')[0] : item.date, // 转换为 YYYY-MM-DD 格式
+            count: item.count
+        }));
+        const { hoverInfo } = this.state;
+
         return (
-            <div>
+            <div style={{ position: 'relative' }} >
                 {/* HeatMap 组件，配置多个属性，用于展示热力图 */}
-                <HeatMap
+                <HeatMap 
                     // 设置热力图的起始日期，从今天起往前推80天
-                    startDate={new Date(new Date().setDate(new Date().getDate() - 80))}
+                    startDate={new Date(new Date().setDate(new Date().getDate() - 180))}
                     // 设置热力图的结束日期为今天
                     endDate={new Date()}
                     // 传入数据，使用父组件传递的数据进行热力图渲染
-                    value={this.props.data}
+                    value={formattedData}
                     // 设置一周的标签，用中文表示星期几
-                    weekLabels={["日","一","二","三","四","五","六"]}
+                    weekLabels={["日", "一", "二", "三", "四", "五", "六"]}
                     // 设置一年的月份标签，用中文数字表示月份
-                    monthLabels={["一","二","三","四","五","六","七","八","九","十","十一","十二"]}
+                    monthLabels={["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"]}
                     // 定义面板的颜色映射，数值越大，颜色越深，表示该天的活动/数据量
                     panelColors={{
                         0: '#AFF0B5',   // 活动为0时的颜色，淡绿色
@@ -35,12 +77,36 @@ class Heatmap extends React.Component<HeatmapProps> {
                         3000: '#00B42A', // 活动值为3000时的颜色，深绿色
                         8000: '#009A29', // 活动值为8000时的颜色，最深绿色
                     }}
-                    // 是否为垂直布局，设置为 false 表示水平布局
-                    isVertical={false}
-                    //TODO:目前垂直布局还没有实现，所以这里设置为 false，需要调整修改heatmap的源码
+                    rectSize={20} // 设置每个矩形的大小
+                    space={3} // 设置矩形之间的间距
+                    isVertical={true}
+                    rectRender={(rectProps, valueItem) => (
+                        <rect
+                            {...rectProps}
+                            onMouseEnter={() => this.handleMouseEnter(valueItem)}
+                            onMouseLeave={this.handleMouseLeave}
+                        />
+                    )}
                 />
-                {/* 用于放置颜色渐变元素的 div，可能后续用于热力图颜色展示 */}
-                <div id="color-elem" />
+                {hoverInfo && (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: this.mouseY + 40, // 调整 tooltip 的垂直位置
+                            left: this.mouseX + 10, // 调整 tooltip 的水平位置
+                            padding: '5px',
+                            backgroundColor: '#fff',
+                            border: '1px solid #ccc',
+                            borderRadius: '4px',
+                            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
+                            pointerEvents: 'none',
+                            zIndex: 10,
+                        }}
+                    >
+                        <div>{hoverInfo.date}</div>
+                        <div>{hoverInfo.count !== null ? `字数: ${hoverInfo.count}` : '当日无记录'}</div>
+                    </div>
+                )}
             </div>
         );
     }
